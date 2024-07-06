@@ -53,6 +53,17 @@ interface Dimensions {
     rating: number;
     
   }
+
+
+  export interface FilterState{
+    sort:string
+    rating:number
+    searchQuery:string
+    isOutOfStock:boolean
+  }
   
+  export interface StateType{
+    filter:FilterState
+  }
  
   

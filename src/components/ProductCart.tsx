@@ -10,11 +10,7 @@ const ProductCart: React.FC<ProductCartProps> = ({
 }) => {
   return (
     <>
-      <div
-        style={{
-        // border:"2px solid red"
-        }}
-      >
+      <div>
         <img width={70} src={thumbnail} alt={title} />
         <h3>{title}</h3>
         <p>Price : {price}</p>

@@ -1,42 +1,17 @@
-import React, { useMemo } from "react";
+import React from "react";
 import useFetch from "../hooks/useFetch";
-import { URL } from "../data/dummy";
+import useFilterProducts from "../hooks/useFilterProducts";
+import { useSelector } from "react-redux";
 import ProductCart from "./ProductCart";
-import { useDispatch, useSelector } from "react-redux";
-import { sortByPrice, filterByRating } from "../redux/features/filterSlice";
+import { StateType } from "../types/product";
+import { URL } from "../data/dummy";
 
 const ProductlistContainer: React.FC = () => {
   const { data, isLoading, error } = useFetch(URL);
 
- const {sort,rating:myRating}= useSelector(state=>state.filter )
+  const filters = useSelector((state: StateType) => state.filter);
 
-//  console.log(state,";.;pjkjhn")
-
-  const filterProducts = useMemo(() => {
-    
-    let updatedProducts = data;
-
-   
-
-
-    if (sort) {
-      updatedProducts = updatedProducts.sort((a, b) => {
-        return sort === "lowToHigh"
-          ? a.price - b.price
-          : b.price - a.price;
-      });
-
-    
-    }
-
-    if(myRating){
-        updatedProducts=updatedProducts.filter(({rating})=> rating >= myRating)
-    }
-
-    console.log(updatedProducts,"upodtae")
-
-    return updatedProducts
-  }, [data,sort,myRating]);
+  const filterProducts = useFilterProducts(data, filters);
 
   if (!error && isLoading) {
     return <h2>Loading....</h2>;
@@ -46,25 +21,22 @@ const ProductlistContainer: React.FC = () => {
     return <h2>Something went wrong,please try again....</h2>;
   }
 
-  console.log(filterProducts,"filter")
   return (
     <>
       <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(6,150px)",
-          gap: "10px",
-        }}
+      className="list-container"
       >
         {filterProducts.length > 0 &&
-          filterProducts.map(({ id, stock, title, thumbnail, rating, price }) => {
-            return (
-              <ProductCart
-                key={id}
-                productDetail={{ id, stock, title, thumbnail, rating, price }}
-              />
-            );
-          })}
+          filterProducts.map(
+            ({ id, stock, title, thumbnail, rating, price }) => {
+              return (
+                <ProductCart
+                  key={id}
+                  productDetail={{ id, stock, title, thumbnail, rating, price }}
+                />
+              );
+            }
+          )}
       </div>
     </>
   );
